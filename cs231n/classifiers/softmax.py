@@ -39,12 +39,18 @@ def softmax_loss_naive(W, X, y, reg):
         logp = np.log(p)
         loss -= logp[y[i]]  # negative log probability is the loss
 
+        # ds = p - onehot(y[i])
         ds = p.copy()
-        
+        ds[y[i]] -= 1
+
+        # add dloss_i/dW 
+        dW += np.outer(X[i], ds)
 
 
     # normalized hinge loss plus regularization
     loss = loss / num_train + reg * np.sum(W * W)
+
+    dW = dW / num_train + W * 2 * reg
 
     #############################################################################
     # TODO:                                                                     #
